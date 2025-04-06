@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="服务器白名单申请系统，提交申请加入我们的游戏服务器">
+    <title>游戏服务器白名单申请系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --primary-dark: #2980b9;
+            --danger-color: #e74c3c;
+            --danger-dark: #c0392b;
+            --success-color: #2ecc71;
+            --success-dark: #27ae60;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --gray-color: #95a5a6;
+            --border-radius: 6px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--dark-color), #1a252f);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            margin-bottom: 2rem;
+            position: relative;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .admin-login-btn {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            background-color: var(--danger-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .admin-login-btn:hover {
+            background-color: var(--danger-dark);
+            transform: translateY(-50%) scale(1.05);
+        }
+        
+        .admin-login-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        @media (min-width: 992px) {
+            .content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .form-section, .rules-section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            height: fit-content;
+        }
+        
+        .form-section {
+            position: sticky;
+            top: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: var(--danger-dark);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--success-dark);
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .rules-list {
+            list-style-type: none;
+        }
+        
+        .rules-list li {
+            position: relative;
+            padding-left: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .rules-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        /* 管理员面板样式 */
+        .admin-panel {
+            display: none;
+            grid-column: 1 / -1;
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .admin-controls {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .search-box {
+            flex-grow: 1;
+            max-width: 300px;
+        }
+        
+        .applications-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .applications-table th {
+            text-align: left;
+            padding: 0.75rem;
+            background-color: var(--light-color);
+            font-weight: 500;
+        }
+        
+        .applications-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        .applications-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .applications-table tr:hover td {
+            background-color: rgba(236, 240, 241, 0.5);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .status-approved {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-rejected {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .close-btn {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: var(--transition);
+            line-height: 1;
+        }
+        
+        .close-btn:hover {
+            color: var(--danger-color);
+            transform: rotate(90deg);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .admin-login-btn {
+                position: static;
+                transform: none;
+                margin-top: 1rem;
+                display: inline-flex;
+            }
+            
+            .applications-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                padding: 1.5rem;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* 加载指示器 */
+        .loader {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 提示信息 */
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+            border-left: 3px solid var(--success-color);
+        }
+        
+        .alert-error {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+            border-left: 3px solid var(--danger-color);
+        }
+        
+        /* 工具类 */
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-3 {
+            margin-top: 1rem;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+        
+        .d-none {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>游戏服务器白名单</h1>
+                <p>提交申请加入我们的专属游戏社区</p>
+                <a href="#" class="admin-login-btn" id="admin-login-btn">
+                    <i>🔒</i> 管理员登录
+                </a>
+            </div>
+        </header>
+        
+        <main class="content">
+            <section class="form-section">
+                <h2 class="section-title">申请表单</h2>
+                <form id="whitelist-form">
+                    <div id="form-alert" class="alert d-none"></div>
+                    
+                    <div class="form-group">
+                        <label for="username">游戏ID</label>
+                        <input type="text" id="username" name="username" class="form-control" required 
+                               placeholder="请输入您的游戏用户名" maxlength="32">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">电子邮箱</label>
+                        <input type="email" id="email" name="email" class="form-control" required 
+                               placeholder="请输入有效的邮箱地址">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reason">申请理由</label>
+                        <textarea id="reason" name="reason" class="form-control" required 
+                                  placeholder="请告诉我们为什么想加入我们的服务器（至少30字）" minlength="30"></textarea>
+                        <small class="text-gray">剩余字数: <span id="reason-counter">300</span></small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reference">如何知道我们服务器的？</label>
+                        <select id="reference" name="reference" class="form-control">
+                            <option value="">请选择...</option>
+                            <option value="friend">朋友推荐</option>
+                            <option value="forum">游戏论坛/社区</option>
+                            <option value="search">搜索引擎</option>
+                            <option value="video">视频平台</option>
+                            <option value="other">其他途径</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="agreement">
+                            <input type="checkbox" id="agreement" name="agreement" required>
+                            我已阅读并同意<a href="#" id="show-rules">《服务器规则》</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        <span id="btn-text">提交申请</span>
+                        <span id="btn-loader" class="loader d-none"></span>
+                    </button>
+                </form>
+            </section>
+            
+            <section class="rules-section">
+                <h2 class="section-title">服务器规则</h2>
+                <ul class="rules-list">
+                    <li><strong>禁止作弊</strong> - 不使用任何外挂、作弊模组或利用游戏漏洞</li>
+                    <li><strong>尊重他人</strong> - 禁止任何形式的骚扰、歧视或不当言论</li>
+                    <li><strong>保护环境</strong> - 不故意破坏他人建筑或服务器环境</li>
+                    <li><strong>文明交流</strong> - 保持聊天频道整洁，禁止刷屏或广告</li>
+                    <li><strong>公平游戏</strong> - 不利用游戏机制进行不公平竞争</li>
+                    <li><strong>遵守指令</strong> - 服从管理员的合理要求和决定</li>
+                    <li><strong>年龄限制</strong> - 本服务器要求玩家年满13周岁</li>
+                </ul>
+                <div class="mt-3">
+                    <p><strong>注意：</strong>违反规则可能导致警告、临时封禁或永久封禁。</p>
+                    <p>提交申请即表示您同意遵守以上规则。</p>
+                </div>
+            </section>
+            
+            <!-- 管理员后台 -->
+            <section class="admin-panel" id="admin-panel">
+                <div class="admin-header">
+                    <h2 class="section-title">白名单申请管理</h2>
+                    <div class="admin-controls">
+                        <div class="search-box">
+                            <input type="text" id="search-input" class="form-control" placeholder="搜索游戏ID或邮箱...">
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="refresh-applications">
+                            <i>🔄</i> 刷新
+                        </button>
+                        <button class="btn btn-danger btn-sm" id="logout-admin">
+                            <i>🚪</i> 退出
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="admin-alert" class="alert d-none"></div>
+                
+                <div class="table-responsive">
+                    <table class="applications-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>游戏ID</th>
+                                <th>状态</th>
+                                <th>申请时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applications-list">
+                            <!-- 申请列表将通过JavaScript动态填充 -->
+                            <tr>
+                                <td colspan="5" class="text-center">加载中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination">
+                    <button class="btn btn-sm" id="prev-page" disabled>上一页</button>
+                    <span id="page-info">第1页</span>
+                    <button class="btn btn-sm" id="next-page" disabled>下一页</button>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2023 游戏服务器名称 版权所有 | 申请处理时间通常为1-3个工作日</p>
+            <p>如有问题，请联系: admin@example.com</p>
+        </footer>
+    </div>
+    
+    <!-- 管理员登录模态框 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">管理员登录</h3>
+                <span class="close-btn" id="close-modal">&times;</span>
+            </div>
+            
+            <div id="login-alert" class="alert d-none"></div>
+            
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-username">用户名</label>
+                    <input type="text" id="admin-username" name="admin-username" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="admin-password">密码</label>
+                    <input type="password" id="admin-password" name="admin-password" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <span id="login-btn-text">登录</span>
+                    <span id="login-btn-loader" class="loader d-none"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 申请详情模态框 -->
+    <div class="modal" id="detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">申请详情</h3>
+                <span class="close-btn" id="close-detail-modal">&times;</span>
+            </div>
+            
+            <div class="modal-body" id="application-detail">
+                <!-- 详情内容将通过JavaScript动态填充 -->
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-success" id="approve-btn">通过申请</button>
+                <button class="btn btn-danger" id="reject-btn">拒绝申请</button>
+                <button class="btn" id="close-detail-btn">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 使用模块模式组织代码
+        const WhitelistApp = (function() {
+            // 配置常量
+            const CONFIG = {
+                itemsPerPage: 10,
+                adminCredentials: {
+                    username: "admin",
+                    password: "admin123" // 实际应用中应从服务器获取
+                },
+                maxReasonLength: 300
+            };
+            
+            // 状态变量
+            let state = {
+                applications: [],
+                filteredApplications: [],
+                currentPage: 1,
+                isAdminLoggedIn: false,
+                currentDetailId: null
+            };
+            
+            // DOM元素
+            const elements = {
+                // 表单元素
+                whitelistForm: document.getElementById('whitelist-form'),
+                usernameInput: document.getElementById('username'),
+                emailInput: document.getElementById('email'),
+                reasonInput: document.getElementById('reason'),
+                referenceSelect: document.getElementById('reference'),
+                agreementCheckbox: document.getElementById('agreement'),
+                submitBtn: document.getElementById('submit-btn'),
+                btnText: document.getElementById('btn-text'),
+                btnLoader: document.getElementById('btn-loader'),
+                reasonCounter: document.getElementById('reason-counter'),
+                formAlert: document.getElementById('form-alert'),
+                
+                // 管理员元素
+                adminLoginBtn: document.getElementById('admin-login-btn'),
+                adminPanel: document.getElementById('admin-panel'),
+                applicationsList: document.getElementById('applications-list'),
+                refreshBtn: document.getElementById('refresh-applications'),
+                logoutBtn: document.getElementById('logout-admin'),
+                searchInput: document.getElementById('search-input'),
+                prevPageBtn: document.getElementById('prev-page'),
+                nextPageBtn: document.getElementById('next-page'),
+                pageInfo: document.getElementById('page-info'),
+                adminAlert: document.getElementById('admin-alert'),
+                
+                // 模态框元素
+                loginModal: document.getElementById('login-modal'),
+                closeModalBtn: document.getElementById('close-modal'),
+                adminLoginForm: document.getElementById('admin-login-form'),
+                adminUsernameInput: document.getElementById('admin-username'),
+                adminPasswordInput: document.getElementById('admin-password'),
+                loginBtnText: document.getElementById('login-btn-text'),
+                loginBtnLoader: document.getElementById('login-btn-loader'),
+                loginAlert: document.getElementById('login-alert'),
+                
+                // 详情模态框元素
+                detailModal: document.getElementById('detail-modal'),
+                closeDetailModalBtn: document.getElementById('close-detail-modal'),
+                applicationDetail: document.getElementById('application-detail'),
+                approveBtn: document.getElementById('approve-btn'),
+                rejectBtn: document.getElementById('reject-btn'),
+                closeDetailBtn: document.getElementById('close-detail-btn'),
+                
+                // 其他元素
+                showRulesLink: document.getElementById('show-rules')
+            };
+            
+            // 初始化函数
+            function init() {
+                // 模拟从服务器加载数据
+                loadSampleData();
+                
+                // 设置事件监听器
+                setupEventListeners();
+                
+                // 初始化字符计数器
+                updateReasonCounter();
+            }
+            
+            // 加载示例数据
+            function loadSampleData() {
+                state.applications = [
+                    {
+                        id: 1,
+                        username: "游戏玩家1",
+                        email: "player1@example.com",
+                        reason: "我听说这个服务器的社区氛围很好，想和朋友一起加入体验。我喜欢建筑和团队合作，希望能为服务器做出贡献。",
+                        reference: "friend",
+                        status: "pending",
+                        submitTime: "2023-05-15 10:30:25",
+                        processedBy: null,
+                        processedTime: null
+                    },
+                    {
+                        id: 2,
+                        username: "MinecraftPro",
+                        email: "proplayer@example.com",
+                        reason: "我是一个有5年经验的Minecraft玩家，擅长红石和建筑。想找一个稳定的服务器长期发展，希望能通过审核。",
+                        reference: "forum",
+                        status: "approved",
+                        submitTime: "2023-05-14 15:42:10",
+                        processedBy: "admin",
+                        processedTime: "2023-05-15 09:15:00"
+                    },
+                    {
+                        id: 3,
+                        username: "新手小白",
+                        email: "newbie@example.com",
+                        reason: "我是Minecraft新手，想找一个友好的服务器学习游戏。保证遵守规则，不捣乱。",
+                        reference: "search",
+                        status: "rejected",
+                        submitTime: "2023-05-16 08:20:35",
+                        processedBy: "admin",
+                        processedTime: "2023-05-16 10:05:15",
+                        rejectReason: "申请理由过于简单，请补充更多信息后重新申请。"
+                    }
+                ];
+                
+                state.filteredApplications = [...state.applications];
+            }
+            
+            // 设置事件监听器
+            function setupEventListeners() {
+                // 表单提交
+                elements.whitelistForm.addEventListener('submit', handleFormSubmit);
+                
+                // 理由输入框变化
+                elements.reasonInput.addEventListener('input', function() {
+                    updateReasonCounter();
+                    validateReason();
+                });
+                
+                // 管理员登录按钮
+                elements.adminLoginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showLoginModal();
+                });
+                
+                // 关闭模态框
+                elements.closeModalBtn.addEventListener('click', hideLoginModal);
+                
+                // 管理员登录表单
+                elements.adminLoginForm.addEventListener('submit', handleAdminLogin);
+                
+                // 刷新申请列表
+                elements.refreshBtn.addEventListener('click', refreshApplications);
+                
+                // 退出登录
+                elements.logoutBtn.addEventListener('click', logoutAdmin);
+                
+                // 搜索输入
+                elements.searchInput.addEventListener('input', function() {
+                    filterApplications(this.value);
+                    state.currentPage = 1;
+                    renderApplications();
+                });
+                
+                // 分页按钮
+                elements.prevPageBtn.addEventListener('click', function() {
+                    if (state.currentPage > 1) {
+                        state.currentPage--;
+                        renderApplications();
+                    }
+                });
+                
+                elements.nextPageBtn.addEventListener('click', function() {
+                    const totalPages = Math.ceil(state.filteredApplications.length / CONFIG.itemsPerPage);
+                    if (state.currentPage < totalPages) {
+                        state.currentPage++;
+                        renderApplications();
+                    }
+                });
+                
+                // 显示规则链接
+                elements.showRulesLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    elements.rulesSection.scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                // 详情模态框按钮
+                elements.closeDetailModalBtn.addEventListener('click', hideDetailModal);
+                elements.closeDetailBtn.addEventListener('click', hideDetailModal);
+                elements.approveBtn.addEventListener('click', approveCurrentApplication);
+                elements.rejectBtn.addEventListener('click', rejectCurrentApplication);
+                
+                // 点击模态框外部关闭
+                window.addEventListener('click', function(e) {
+                    if (e.target === elements.loginModal) {
+                        hideLoginModal();
+                    }
+                    if (e.target === elements.detailModal) {
+                        hideDetailModal();
+                    }
+                });
+            }
+            
+            // 处理表单提交
+            function handleFormSubmit(e) {
+                e.preventDefault();
+                
+                if (!validateForm()) {
+                    return;
+                }
+                
+                // 显示加载状态
+                toggleSubmitButtonLoading(true);
+                
+                // 模拟网络请求延迟
+                setTimeout(() => {
+                    const newApplication = {
+                        id: state.applications.length + 1,
+                        username: elements.usernameInput.value.trim(),
+                        email: elements.emailInput.value.trim(),
+                        reason: elements.reasonInput.value.trim(),
+                        reference: elements.referenceSelect.value,
+                        status: "pending",
+                        submitTime: new Date().toLocaleString(),
+                        processedBy: null,
+                        processedTime: null
+                    };
+                    
+                    state.applications.unshift(newApplication);
+                    state.filteredApplications.unshift(newApplication);
+                    
+                    // 如果是管理员登录状态，更新列表
+                    if (state.isAdminLoggedIn) {
+                        renderApplications();
+                    }
+                    
+                    // 显示成功消息
+                    showAlert(elements.formAlert, "申请提交成功！我们将在1-3个工作日内处理您的申请。", "success");
+                    
+                    // 重置表单
+                    elements.whitelistForm.reset();
+                    updateReasonCounter();
+                    
+                    // 恢复按钮状态
+                    toggleSubmitButtonLoading(false);
+                }, 1000);
+            }
+            
+            // 验证表单
+            function validateForm() {
+                // 检查是否同意规则
+                if (!elements.agreementCheckbox.checked) {
+                    showAlert(elements.formAlert, "请阅读并同意服务器规则", "error");
+                    return false;
+                }
+                
+                // 验证理由长度
+                if (elements.reasonInput.value.trim().length < 30) {
+                    showAlert(elements.formAlert, "申请理由至少需要30个字符", "error");
+                    return false;
+                }
+                
+                // 验证邮箱格式
+                if (!validateEmail(elements.emailInput.value)) {
+                    showAlert(elements.formAlert, "请输入有效的邮箱地址", "error");
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // 验证理由长度
+            function validateReason() {
+                if (elements.reasonInput.value.trim().length < 30) {
+                    elements.reasonInput.setCustomValidity("申请理由至少需要30个字符");
+                } else {
+                    elements.reasonInput.setCustomValidity("");
+                }
+            }
+            
+            // 更新理由计数器
+            function updateReasonCounter() {
+                const remaining = CONFIG.maxReasonLength - elements.reasonInput.value.length;
+                elements.reasonCounter.textContent = remaining;
+                
+                if (remaining < 0) {
+                    elements.reasonCounter.style.color = "var(--danger-color)";
+                    elements.reasonInput.value = elements.reasonInput.value.substring(0, CONFIG.maxReasonLength);
+                } else if (remaining < 30) {
+                    elements.reasonCounter.style.color = "var(--warning-color)";
+                } else {
+                    elements.reasonCounter.style.color = "inherit";
+                }
+            }
+            
+            // 切换提交按钮加载状态
+            function toggleSubmitButtonLoading(isLoading) {
+                if (isLoading) {
+                    elements.btnText.classList.add("d-none");
+                    elements.btnLoader.classList.remove("d-none");
+                    elements.submitBtn.disabled = true;
+                } else {
+                    elements.btnText.classList.remove("d-none");
+                    elements.btnLoader.classList.add("d-none");
+                    elements.submitBtn.disabled = false;
+                }
+            }
+            
+            // 显示登录模态框
+            function showLoginModal() {
+                elements.loginAlert.classList.add("d-none");
+                elements.adminLoginForm.reset();
+                elements.loginModal.style.display = "block";
+                setTimeout(() => {
+                    elements.loginModal.classList.add("show");
+                }, 10);
+            }
+            
+            // 隐藏登录模态框
+            function hideLoginModal() {
+                elements.loginModal.classList.remove("show");
+                setTimeout(() => {
+                    elements.loginModal.style.display = "none";
+                }, 300);
+            }
+            
+            // 处理管理员登录
+            function handleAdminLogin(e) {
+                e.preventDefault();
+                
+                const username = elements.adminUsernameInput.value.trim();
+                const password = elements.adminPasswordInput.value;
+                
+                // 显示加载状态
+                elements.loginBtnText.classList.add("d-none");
+                elements.loginBtnLoader.classList.remove("d-none");
+                
+                // 模拟网络请求延迟
+                setTimeout(() => {
+                    if (username === CONFIG.adminCredentials.username && password === CONFIG.adminCredentials.password) {
+                        state.isAdminLoggedIn = true;
+                        elements.adminPanel.style.display = "block";
+                        elements.adminLoginBtn.style.display = "none";
+                        hideLoginModal();
+                        renderApplications();
+                    } else {
+                        showAlert(elements.loginAlert, "用户名或密码错误", "error");
+                    }
+                    
+                    // 恢复按钮状态
+                    elements.loginBtnText.classList.remove("d-none");
+                    elements.loginBtnLoader.classList.add("d-none");
+                }, 800);
+            }
+            
+            // 退出管理员登录
+            function logoutAdmin() {
+                state.isAdminLoggedIn = false;
+                elements.adminPanel.style.display = "none";
+                elements.adminLoginBtn.style.display = "flex";
+                showAlert(elements.adminAlert, "已退出管理员登录", "success");
+            }
+            
+            // 刷新申请列表
+            function refreshApplications() {
+                // 模拟从服务器刷新数据
+                showAlert(elements.adminAlert, "申请列表已刷新", "success");
+                renderApplications();
+            }
+            
+            // 筛选申请
+            function filterApplications(searchTerm) {
+                if (!searchTerm) {
+                    state.filteredApplications = [...state.applications];
+                    return;
+                }
+                
+                const term = searchTerm.toLowerCase();
+                state.filteredApplications = state.applications.filter(app => 
+                    app.username.toLowerCase().includes(term) || 
+                    app.email.toLowerCase().includes(term)
+                );
+            }
+            
+            // 渲染申请列表
+            function renderApplications() {
+                const startIdx = (state.currentPage - 1) * CONFIG.itemsPerPage;
+                const endIdx = startIdx + CONFIG.itemsPerPage;
+                const paginatedApps = state.filteredApplications.slice(startIdx, endIdx);
+                
+                if (paginatedApps.length === 0) {
+                    elements.applicationsList.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center">没有找到申请记录</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                elements.applicationsList.innerHTML = paginatedApps.map(app => `
+                    <tr>
+                        <td>${app.id}</td>
+                        <td>${app.username}</td>
+                        <td><span class="status-badge status-${app.status}">${getStatusText(app.status)}</span></td>
+                        <td>${formatDate(app.submitTime)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-success btn-sm" data-id="${app.id}" data-action="approve">
+                                    <i>✓</i> 通过
+                                </button>
+                                <button class="btn btn-danger btn-sm" data-id="${app.id}" data-action="reject">
+                                    <i>✗</i> 拒绝
+                                </button>
+                                <button class="btn btn-sm" data-id="${app.id}" data-action="view">
+                                    <i>🔍</i> 详情
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join("");
+                
+                // 更新分页信息
+                updatePagination();
+                
+                // 添加行事件监听器
+                document.querySelectorAll('[data-action="approve"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        approveApplication(id);
+                    });
+                });
+                
+                document.querySelectorAll('[data-action="reject"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        rejectApplication(id);
+                    });
+                });
+                
+                document.querySelectorAll('[data-action="view"]').forEach(btn => {
+				btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        showApplicationDetail(id);
+                    });
+                });
+            }
+
+            // 更新分页状态
+            function updatePagination() {
+                const totalPages = Math.ceil(state.filteredApplications.length / CONFIG.itemsPerPage);
+                
+                elements.prevPageBtn.disabled = state.currentPage === 1;
+                elements.nextPageBtn.disabled = state.currentPage === totalPages;
+                elements.pageInfo.textContent = `第${state.currentPage}页 / 共${totalPages}页`;
+            }
+
+            // 显示申请详情
+            function showApplicationDetail(id) {
+                const app = state.applications.find(a => a.id === id);
+                if (!app) return;
+
+                state.currentDetailId = id;
+                elements.applicationDetail.innerHTML = `
+                    <div class="detail-item">
+                        <label>游戏ID：</label>
+                        <span>${app.username}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>电子邮箱：</label>
+                        <span>${app.email}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>申请时间：</label>
+                        <span>${formatDate(app.submitTime)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>了解途径：</label>
+                        <span>${getReferenceText(app.reference)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>申请理由：</label>
+                        <p>${app.reason}</p>
+                    </div>
+                    ${app.status === 'rejected' ? `
+                    <div class="detail-item">
+                        <label>拒绝理由：</label>
+                        <p>${app.rejectReason || '无'}</p>
+                    </div>` : ''}
+                    ${app.processedBy ? `
+                    <div class="detail-item">
+                        <label>处理人：</label>
+                        <span>${app.processedBy}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>处理时间：</label>
+                        <span>${formatDate(app.processedTime)}</span>
+                    </div>` : ''}
+                `;
+
+                showDetailModal();
+            }
+
+            // 批准当前申请
+            function approveCurrentApplication() {
+                const app = state.applications.find(a => a.id === state.currentDetailId);
+                if (app) {
+                    app.status = 'approved';
+                    app.processedBy = CONFIG.adminCredentials.username;
+                    app.processedTime = new Date().toLocaleString();
+                    renderApplications();
+                    hideDetailModal();
+                    showAlert(elements.adminAlert, `已批准 ${app.username} 的申请`, 'success');
+                }
+            }
+
+            // 拒绝当前申请
+            function rejectCurrentApplication() {
+                const app = state.applications.find(a => a.id === state.currentDetailId);
+                if (app) {
+                    const rejectReason = prompt('请输入拒绝理由（可选）：');
+                    app.status = 'rejected';
+                    app.rejectReason = rejectReason;
+                    app.processedBy = CONFIG.adminCredentials.username;
+                    app.processedTime = new Date().toLocaleString();
+                    renderApplications();
+                    hideDetailModal();
+                    showAlert(elements.adminAlert, `已拒绝 ${app.username} 的申请`, 'error');
+                }
+            }
+
+            // 显示详情模态框
+            function showDetailModal() {
+                elements.detailModal.style.display = 'block';
+                setTimeout(() => {
+                    elements.detailModal.classList.add('show');
+                }, 10);
+            }
+
+            // 隐藏详情模态框
+            function hideDetailModal() {
+                elements.detailModal.classList.remove('show');
+                setTimeout(() => {
+                    elements.detailModal.style.display = 'none';
+                    state.currentDetailId = null;
+                }, 300);
+            }
+
+            // 工具函数
+            function getStatusText(status) {
+                switch(status) {
+                    case 'pending': return '待审核';
+                    case 'approved': return '已通过';
+                    case 'rejected': return '已拒绝';
+                    default: return status;
+                }
+            }
+
+            function getReferenceText(reference) {
+                switch(reference) {
+                    case 'friend': return '朋友推荐';
+                    case 'forum': return '游戏论坛';
+                    case 'search': return '搜索引擎';
+                    case 'video': return '视频平台';
+                    case 'other': return '其他途径';
+                    default: return '未知';
+                }
+            }
+
+            function formatDate(dateString) {
+                if (!dateString) return 'N/A';
+                const options = {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                return new Date(dateString).toLocaleString('zh-CN', options);
+            }
+
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function showAlert(element, message, type) {
+                element.textContent = message;
+                element.className = `alert alert-${type} fade-in`;
+                element.classList.remove('d-none');
+                
+                setTimeout(() => {
+                    element.classList.add('d-none');
+                }, 5000);
+            }
+
+            // 暴露公共方法
+            return {
+                init: init
+            };
+        })();
+
+        // 初始化应用
+        WhitelistApp.init();
+    </script>
+</body>
+</html>
